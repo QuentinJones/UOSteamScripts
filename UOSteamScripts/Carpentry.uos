@@ -1,0 +1,113 @@
+clearjournal
+if not @listexists 'carpjunk'
+  createlist 'carpjunk'
+  pushlist 'carpjunk' '0xe3c' //Large Crate
+  pushlist 'carpjunk' '0xe3e' //Medium Crate
+  pushlist 'carpjunk' '0x27aa' //Fukiya
+  pushlist 'carpjunk' '0x1b7a' //Wooden Shield
+  pushlist 'carpjunk' '0xe89' //Quarter Staff
+  pushlist 'carpjunk' '0xe81' //Shepherd's Crook
+  pushlist 'carpjunk' '0x13f8' //Gnarled Staff
+  pushlist 'carpjunk' '0xdf0' //Black Staff
+  pushlist 'carpjunk' '0x2d25' //Wild Staff
+endif
+if not @listexists 'carpTools'
+  createlist 'carpTools'
+  pushlist 'carpTools' 0x1034 //saw
+  pushlist 'carpTools' 0x10e7 //scorp
+  pushlist 'carpTools' 0x102e //nails
+  pushlist 'carpTools' 0x1029 //dovetail saw
+  pushlist 'carpTools' 0x1030 //jointing plane
+  pushlist 'carpTools' 0x1032 //smoothing plane
+  pushlist 'carpTools' 0x10e6 //inshave
+  pushlist 'carpTools' 0x102a //hammer
+  pushlist 'carpTools' 0x1034 //saw
+  pushlist 'carpTools' 0x102c //moulding planes
+  pushlist 'carpTools' 0x10e5 //froe
+  pushlist 'carpTools' 0x10e4 //Draw Knife
+endif
+for 0 in 'carpTools'
+  if @findtype carpTools[] 'backpack'
+    @setalias  'selectedTool' 'found'
+    break
+  endif
+endfor
+if not @findobject 'selectedTool'
+  headmsg 'Get more carpentry tools!'
+  stop
+endif
+if not @findobject 'trash'
+  headmsg 'Select your trash barrel'
+  promptalias 'trash'
+endif
+if @counttype 0x1bd7 0x0 'backpack' < 20
+  if @counttype 0x1bd7 0x0 'restock' < 150
+    headmsg 'Out of lumber'
+    stop
+  endif
+  movetype 0x1bd7 'restock' 'backpack' 0 0 0 0x0 150
+  pause 1000
+endif
+if not @findobject 'restock'
+  headmsg 'Select the container with your boards'
+  promptalias 'restock'
+  useobject 'restock'
+endif
+if contents 'backpack' > 115 or diffweight < 95
+  clearjournal
+  for 0 to carpjunk
+    while @movetype carpjunk[] 'backpack' 'trash'
+      pause 500
+      if @injournal 'That container cannot hold more weight.'
+        clearjournal
+        while not @injournal 'Emptying the trashcan!'
+          clearjournal
+          pause 5000
+        endwhile
+      endif
+    endwhile
+  endfor
+endif
+if skill 'carpentry' < 30
+  headmsg 'Buy more skill!'
+  stop
+elseif useobject 'selectedTool'
+  waitforgump 0x1cc 15000
+  if skill 'carpentry' < 48
+    replygump 0x1cc 9003 //Containers
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 99 //Medium Chest
+  elseif skill 'carpentry' < 53
+    replygump 0x1cc 9003 //Containers
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 100 //Large Chest
+  elseif skill 'carpentry' < 60
+    replygump 0x1cc 9005 //Armor
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 120 //Wooden Shields
+  elseif skill 'carpentry' < 74
+    replygump 0x1cc 9004 // Weapons
+    waitforgump 0x38920abd 2000
+    replygump 0x1cc 122 //fukiya
+  elseif skill 'carpentry' < 79
+    replygump 0x1cc 9004 //Weapons
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 118 //Quarterstaffs
+  elseif skill 'carpentry' < 82
+    replygump 0x1cc 9004 //Weapons
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 117 //Shepherd's Crooks
+  elseif skill 'carpentry' < 96
+    replygump 0x1cc 9004 //Weapons
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 906 //Black Staffs
+  elseif skill 'carpentry' < 100
+    replygump 0x1cc 9004 //Weapons
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 135 //Wild Staffs
+  else
+    headmsg 'Carpentry completed!'
+    stop
+  endif
+  pause 1000
+endif
