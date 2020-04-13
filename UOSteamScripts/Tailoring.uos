@@ -1,0 +1,74 @@
+clearjournal
+if not @listexists 'tailorJunk'
+  createlist 'tailorJunk'
+  pushlist 'tailorJunk' '0x152e' //Short Pants
+  pushlist 'tailorJunk' '0x1f03' //Robe
+  pushlist 'tailorJunk' '0x2797' //Ninja Tabi
+  pushlist 'tailorJunk' '0x1515' //Cloak
+  pushlist 'tailorJunk' '0x175d' //Oil Cloth
+  pushlist 'tailorJunk' '0x2798' //Kasa
+  pushlist 'tailorJunk' '0x2309' //Fur Cloak
+  pushlist 'tailorJunk' '0x4064' //Gargish Cloth Kilt
+  pushlist 'tailorJunk' '0x4060' //Gargish Cloth Arms
+endif
+if not @listexists 'tailorTools'
+  createlist 'tailorTools'
+  pushlist 'tailorTools' 0xf9d //Sewing Kit
+endif
+for 0 in 'tailorTools'
+  if @findtype tailorTools[] 'backpack'
+    @setalias  'selectedTool' 'found'
+    break
+  endif
+endfo
+if not @findobject 'selectedTool'
+  headmsg 'Get more tailoring tools!'
+  stop
+endif
+if not @findobject 'salvageBag'
+  headmsg 'Select your salvage bag'
+  promptalias 'salvageBag'
+endif
+if not @findobject 'restock'
+  headmsg 'Select the container with your cloth'
+  promptalias 'restock'
+  useobject 'restock'
+endif
+if @counttype 0x1766 0x0 'backpack' < 20
+  if @counttype 0xf95 0x0 'restock' < 1
+    headmsg 'Out of cloth'
+    stop
+  endif
+  movetype 0xf95 'restock' 'backpack' 0 0 0 0x0 20
+  usetype 0xf9e
+  waitfortarget 15000
+  targettype 0xf95
+  pause 1000
+endif
+if contents 'backpack' > 90 or diffweight < 95
+  for 0 to tailorJunk
+    while @movetype tailorJunk[] 'backpack' 'salvageBag' 0 0 0 'any' 1 0
+      pause 500
+    endwhile
+  endfor
+  waitforcontext 0x44793087 912 15000
+endif
+if skill 'tailoring' < 29
+  headmsg 'Buy more skill!'
+  stop
+elseif useobject 'selectedTool'
+  waitforgump 0x1cc 15000
+  if skill 'tailoring' < 117
+    replygump 0x1cc 9007 //Cloth Armor
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 207 //Gargish Cloth Kilt
+  elseif skill 'tailoring' < 120
+    replygump 0x1cc 9007 //Cloth Armor
+    waitforgump 0x1cc 15000
+    replygump 0x1cc 204 //Gargish Cloth Arms
+  else
+    headmsg 'Tailoring completed!'
+    stop
+  endif
+  pause 1000
+endif
