@@ -1,3 +1,6 @@
+//Title: Tailoring Training
+//Author: Quentin Jones
+//Requirement: Buy up to 29 tailoring. Have a salvage bag and tailor tools.
 clearjournal
 if not @listexists 'tailorJunk'
   createlist 'tailorJunk'
@@ -7,9 +10,11 @@ if not @listexists 'tailorJunk'
   pushlist 'tailorJunk' '0x1515' //Cloak
   pushlist 'tailorJunk' '0x175d' //Oil Cloth
   pushlist 'tailorJunk' '0x2798' //Kasa
-  pushlist 'tailorJunk' '0x2309' //Fur Cloak
+  pushlist 'tailorJunk' '0x2309' //Fur Cape
+  pushlist 'tailorJunk' '0x2307' //Fur Boots
   pushlist 'tailorJunk' '0x4064' //Gargish Cloth Kilt
   pushlist 'tailorJunk' '0x4060' //Gargish Cloth Arms
+  pushlist 'tailorJunk' '0x3175' //Elven Shirt (Brown)
 endif
 if not @listexists 'tailorTools'
   createlist 'tailorTools'
@@ -20,7 +25,7 @@ for 0 in 'tailorTools'
     @setalias  'selectedTool' 'found'
     break
   endif
-endfo
+endfor
 if not @findobject 'selectedTool'
   headmsg 'Get more tailoring tools!'
   stop
@@ -45,7 +50,7 @@ if @counttype 0x1766 0x0 'backpack' < 20
   targettype 0xf95
   pause 1000
 endif
-if contents 'backpack' > 90 or diffweight < 95
+if contents 'backpack' > 40 or diffweight < 85
   for 0 to tailorJunk
     while @movetype tailorJunk[] 'backpack' 'salvageBag' 0 0 0 'any' 1 0
       pause 500
@@ -58,13 +63,27 @@ if skill 'tailoring' < 29
   stop
 elseif useobject 'selectedTool'
   waitforgump 0x1cc 15000
-  if skill 'tailoring' < 117
-    replygump 0x1cc 9007 //Cloth Armor
-    waitforgump 0x1cc 15000
+  if skill 'tailoring' < 35
+    replygump 0x1cc 37 //Short Pants
+  elseif skill 'tailoring' < 41.4
+    replygump 0x1cc 28 //Fur Cape
+  elseif skill 'tailoring' < 50
+    replygump 0x1cc 25 //Cloak
+  elseif skill 'tailoring' < 54
+    replygump 0x1cc 601 //Fur Boots
+  elseif skill 'tailoring' < 65
+    replygump 0x1cc 26 //Robe
+  elseif skill 'tailoring' < 72
+    replygump 0x1cc 17 //Kasa
+  elseif skill 'tailoring' < 78
+    replygump 0x1cc 602 //Ninja Tabi
+  elseif skill 'tailoring' < 90
+    replygump 0x1cc 500 //Oil Cloth
+  elseif skill 'tailoring' < 110
+    replygump 0x1cc 70 //Elven Shirt (Brown)
+  elseif skill 'tailoring' < 117
     replygump 0x1cc 207 //Gargish Cloth Kilt
   elseif skill 'tailoring' < 120
-    replygump 0x1cc 9007 //Cloth Armor
-    waitforgump 0x1cc 15000
     replygump 0x1cc 204 //Gargish Cloth Arms
   else
     headmsg 'Tailoring completed!'
