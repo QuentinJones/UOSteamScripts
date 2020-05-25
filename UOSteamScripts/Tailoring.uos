@@ -14,6 +14,7 @@ if not @listexists 'tailorJunk'
   pushlist 'tailorJunk' '0x2307' //Fur Boots
   pushlist 'tailorJunk' '0x4064' //Gargish Cloth Kilt
   pushlist 'tailorJunk' '0x4060' //Gargish Cloth Arms
+  pushlist 'tailorJunk' '0x4049' //Gargish Leather Chest
   pushlist 'tailorJunk' '0x3175' //Elven Shirt (Brown)
 endif
 if not @listexists 'tailorTools'
@@ -79,6 +80,14 @@ elseif useobject 'selectedTool'
     replygump 0x1cc 602 //Ninja Tabi
   elseif skill 'tailoring' < 90
     replygump 0x1cc 500 //Oil Cloth
+    //Oil Cloth can take you to 110 cheaper, but slowly
+    //elseif skill 'tailoring' <110
+    //  replygump 0x1cc 500 //Oil Cloth
+    //You can get faster gains switching to leather here
+    //  elseif skill 'tailoring' < 105
+    //    replygump 0x1cc 70 //Elven Shirt (Brown)
+    //  elseif skill 'tailoring' < 110
+    //    replygump 0x1cc 658 //Gargish Leather Chest
   elseif skill 'tailoring' < 110
     replygump 0x1cc 70 //Elven Shirt (Brown)
   elseif skill 'tailoring' < 117
