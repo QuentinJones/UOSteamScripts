@@ -1,6 +1,7 @@
 //Title: Tailoring Training
 //Author: Quentin Jones
 //Requirement: Buy up to 29 tailoring. Have a salvage bag and tailor tools.
+//Notes: There are some alternative paths available when approaching GM. Uncomment the appropriate section to use that path. Leather will be required for some items 
 clearjournal
 if not @listexists 'tailorJunk'
   createlist 'tailorJunk'
