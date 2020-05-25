@@ -1,15 +1,15 @@
 clearjournal
-if not @listexists 'carpjunk'
-  createlist 'carpjunk'
-  pushlist 'carpjunk' '0xe3c' //Large Crate
-  pushlist 'carpjunk' '0xe3e' //Medium Crate
-  pushlist 'carpjunk' '0x27aa' //Fukiya
-  pushlist 'carpjunk' '0x1b7a' //Wooden Shield
-  pushlist 'carpjunk' '0xe89' //Quarter Staff
-  pushlist 'carpjunk' '0xe81' //Shepherd's Crook
-  pushlist 'carpjunk' '0x13f8' //Gnarled Staff
-  pushlist 'carpjunk' '0xdf0' //Black Staff
-  pushlist 'carpjunk' '0x2d25' //Wild Staff
+if not @listexists 'carpJunk'
+  createlist 'carpJunk'
+  pushlist 'carpJunk' '0xe3c' //Large Crate
+  pushlist 'carpJunk' '0xe3e' //Medium Crate
+  pushlist 'carpJunk' '0x27aa' //Fukiya
+  pushlist 'carpJunk' '0x1b7a' //Wooden Shield
+  pushlist 'carpJunk' '0xe89' //Quarter Staff
+  pushlist 'carpJunk' '0xe81' //Shepherd's Crook
+  pushlist 'carpJunk' '0x13f8' //Gnarled Staff
+  pushlist 'carpJunk' '0xdf0' //Black Staff
+  pushlist 'carpJunk' '0x2d25' //Wild Staff
 endif
 if not @listexists 'carpTools'
   createlist 'carpTools'
@@ -33,7 +33,7 @@ for 0 in 'carpTools'
   endif
 endfor
 if not @findobject 'selectedTool'
-  headmsg 'Get more carpentry tools!'
+  headmsg 'Get more carpentry carpTools!'
   stop
 endif
 if not @findobject 'trash'
@@ -55,8 +55,8 @@ if not @findobject 'restock'
 endif
 if contents 'backpack' > 115 or diffweight < 95
   clearjournal
-  for 0 to carpjunk
-    while @movetype carpjunk[] 'backpack' 'trash'
+  for 0 to carpJunk
+    while @movetype carpJunk[] 'backpack' 'trash'
       pause 500
       if @injournal 'That container cannot hold more weight.'
         clearjournal

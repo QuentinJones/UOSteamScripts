@@ -1,0 +1,35 @@
+while not dead
+  if @injournal 'what instrument' 'system'
+    clearjournal
+    usetype 0xe9c
+    pause 1000
+  endif
+  if not findtype 0xe9c
+    headmsg 'my tunes are forever silenced. =/'
+    stop
+  endif
+  if hits < 65
+    cast 'Greater Heal'
+    waitfortarget 15000
+    target 'self'
+    whilenot hits == maxhits
+      pause 2500
+    endif
+    if mana < 45
+      useskill 'meditation'
+      while not mana == maxmana
+      endwhile
+      pause 2500
+    endif 
+    if skill 'Discordance' == 120
+      headmsg 'a stoned newbie thanks you. have fun killing mongbats now =)'
+      stop
+    endif
+    if skill 'Discordance' >= 90 and skill 'Discordance' < 120
+      cast 'despair'
+      pause 1900
+      target 'self'
+      pause 500
+      cast 'despair'
+      pause 4000
+    endif

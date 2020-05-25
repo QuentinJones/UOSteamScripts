@@ -1,0 +1,117 @@
+if not findalias 'pet1' or not @findobject 'pet1'
+  headmsg 'Select first pet'
+  promptalias 'pet1'
+endif
+if not listexists 'healPercentage'
+clearlist 'healPercentage'
+	createlist 'healPercentage'
+	pushlist 80
+endif
+if hits 'pet1' == 0
+  while hits 'pet1' == 0
+    usetype 0xe21
+    target 'pet1'
+    waitforjournal 'You begin applying the bandages' 3000
+    while 1 = 1
+      if not @injournal 'You were unable to resurrect your patient' 'system'
+        clearjournal
+        replay
+      endif
+      if not @injournal 'You finish applying the bandages' 'system'
+        clearjournal
+        replay
+      endif
+      pause 100
+    endwhile
+    clearjournal
+  endwhile
+else
+  while poisoned 'pet1'
+    if inrange 'pet1' 2
+      if @findtype 0xe21
+        usetype 0xe21
+        target 'pet1'
+        while 1 = 1
+          if not @injournal 'You finish applying the bandages' 'system'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'You heal what little damage' 'system'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'That being is not damaged' 'system'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'You did not stay close enough'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'You have cured the target of all' 'system'
+            clearjournal
+            replay
+          endif
+          pause 100
+        endwhile
+      else
+        cast 'Arch Cure'
+        waitfortarget 15000
+        target! 'pet1'
+        pause 1500
+      endif
+    else
+      cast 'Arch Cure'
+      waitfortarget 15000
+      target! 'pet1'
+      pause 1500
+    endif
+    if hits 'pet1' == 0
+      replay
+    endif
+  endwhile
+  while hits 'pet1' < maxhits 'pet1'
+    if inrange 'pet1' 2
+      if @findtype 0xe21
+        usetype 0xe21
+        target 'pet1'
+        while 1 = 1
+          if not @injournal 'You finish applying the bandages' 'system'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'You heal what little damage' 'system'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'That being is not damaged' 'system'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'You did not stay close enough'
+            clearjournal
+            replay
+          endif
+          if not @injournal 'You have cured the target of all' 'system'
+            clearjournal
+            replay
+          endif
+          pause 100
+        endwhile
+      else
+        cast 'Greater Heal'
+        waitfortarget 15000
+        target! 'pet1'
+        pause 1500
+      endif
+    else
+      cast 'Greater Heal'
+      waitfortarget 15000
+      target! 'pet1'
+      pause 1500
+    endif
+    if hits 'pet1' == 0 or poisoned 'pet1'
+      replay
+    endif
+  endwhile
+endif
