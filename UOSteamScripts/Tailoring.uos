@@ -1,7 +1,7 @@
 //Title: Tailoring Training
 //Author: Quentin Jones
 //Requirement: Buy up to 29 tailoring. Have a salvage bag and tailor tools.
-//Notes: There are some alternative paths available when approaching GM. Uncomment the appropriate section to use that path. Leather will be required for some items 
+//Notes: There are some alternative paths available when approaching GM. Uncomment the appropriate section to use that path. Leather will be required for some items
 clearjournal
 if not @listexists 'tailorJunk'
   createlist 'tailorJunk'
@@ -58,7 +58,7 @@ if contents 'backpack' > 40 or diffweight < 85
       pause 500
     endwhile
   endfor
-  waitforcontext 0x44793087 912 15000
+  waitforcontext 'salvageBag' 912 15000
 endif
 if skill 'tailoring' < 29
   headmsg 'Buy more skill!'
