@@ -1,23 +1,22 @@
+//Title: Auto-heal pet
+//Author: Quentin Jones
+//Requirements: Veterinary and/or Magery skill
+//Notes: Script does not currently check if skill is high enough to cure poison or resurrect pets
+clearjournal
 if not findalias 'pet1' or not @findobject 'pet1'
   headmsg 'Select first pet'
   promptalias 'pet1'
 endif
-if not listexists 'healPercentage'
-clearlist 'healPercentage'
-	createlist 'healPercentage'
-	pushlist 80
-endif
-if hits 'pet1' == 0
-  while hits 'pet1' == 0
+if dead 'pet1'
+  while dead 'pet1'
     usetype 0xe21
-    target 'pet1'
+    autotargetfriend 'pet1'
     waitforjournal 'You begin applying the bandages' 3000
-    while 1 = 1
-      if not @injournal 'You were unable to resurrect your patient' 'system'
+    while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
+      if @injournal 'You were unable to resurrect your patient' 'system'
         clearjournal
         replay
-      endif
-      if not @injournal 'You finish applying the bandages' 'system'
+      elseif @injournal 'You finish applying the bandages' 'system'
         clearjournal
         replay
       endif
@@ -30,87 +29,71 @@ else
     if inrange 'pet1' 2
       if @findtype 0xe21
         usetype 0xe21
-        target 'pet1'
-        while 1 = 1
-          if not @injournal 'You finish applying the bandages' 'system'
+        autotargetfriend 'pet1'
+        while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
+          if @injournal 'You finish applying the bandages' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'You heal what little damage' 'system'
+          elseif @injournal 'You heal what little damage' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'That being is not damaged' 'system'
+          elseif @injournal 'That being is not damaged' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'You did not stay close enough'
+          elseif @injournal 'You did not stay close enough' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'You have cured the target of all' 'system'
+          elseif @injournal 'You have cured the target of all' 'system'
             clearjournal
             replay
           endif
           pause 100
         endwhile
       else
-        cast 'Arch Cure'
-        waitfortarget 15000
-        target! 'pet1'
+        cast 'Arch Cure' 'pet1'
         pause 1500
       endif
     else
-      cast 'Arch Cure'
-      waitfortarget 15000
-      target! 'pet1'
+      cast 'Arch Cure' 'pet1'
       pause 1500
     endif
-    if hits 'pet1' == 0
+    if dead 'pet1'
       replay
     endif
   endwhile
-  while hits 'pet1' < maxhits 'pet1'
+  while hits 'pet1' < 80
     if inrange 'pet1' 2
       if @findtype 0xe21
         usetype 0xe21
-        target 'pet1'
-        while 1 = 1
-          if not @injournal 'You finish applying the bandages' 'system'
+        autotargetfriend 'pet1'
+        while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
+          if @injournal 'You finish applying the bandages' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'You heal what little damage' 'system'
+          elseif @injournal 'You heal what little damage' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'That being is not damaged' 'system'
+          elseif @injournal 'That being is not damaged' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'You did not stay close enough'
+          elseif @injournal 'You did not stay close enough' 'system'
             clearjournal
             replay
-          endif
-          if not @injournal 'You have cured the target of all' 'system'
+          elseif @injournal 'You have cured the target of all' 'system'
             clearjournal
             replay
           endif
           pause 100
         endwhile
       else
-        cast 'Greater Heal'
-        waitfortarget 15000
-        target! 'pet1'
+        cast 'Greater Heal' 'pet1'
         pause 1500
       endif
     else
-      cast 'Greater Heal'
-      waitfortarget 15000
-      target! 'pet1'
+      cast 'Greater Heal' 'pet1'
       pause 1500
     endif
-    if hits 'pet1' == 0 or poisoned 'pet1'
+    if dead 'pet1' or poisoned 'pet1'
       replay
     endif
   endwhile
