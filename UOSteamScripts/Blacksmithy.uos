@@ -80,6 +80,7 @@ while not dead
       replygump 0x1cc 32 //Standard Platemail Kabuto
     else
       headmsg 'Blacksmithy completed!'
+      replygump 0x1cc 0
       stop
     endif
     waitforgump 0x1cc 15000
