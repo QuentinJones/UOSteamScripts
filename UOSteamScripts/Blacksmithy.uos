@@ -78,18 +78,6 @@ elseif useobject 'selectedTool'
   elseif skill 'blacksmithy' < 105
     replygump 0x1cc 208 //Boomerang
     waitforgump 0x1cc 15000
-    // elseif skill 'blacksmithy' < 106.4
-    //    replygump 0x1cc 10 //Platemail Gorget
-    //   waitforgump 0x1cc 15000
-    //  elseif skill 'blacksmithy' < 108.9
-    //    replygump 0x1cc 9 //Platemail Gloves
-    //    waitforgump 0x1cc 15000
-    //  elseif skill 'blacksmithy' < 116.3
-    //    replygump 0x1cc 8 //Platemail Arms
-    //   waitforgump 0x1cc 15000
-    //  elseif skill 'blacksmithy' < 118.8
-    //   replygump 0x1cc 11 //Platemail Legs
-    //   waitforgump 0x1cc 15000
   elseif skill 'blacksmithy' < 120.0
     replygump 0x1cc 15 //Platemail Mempo
     waitforgump 0x1cc 15000
