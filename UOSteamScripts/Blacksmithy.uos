@@ -1,24 +1,15 @@
 //Title: Blacksmithy Training
 //Author: Quentin Jones
 //Note: Be sure the metal type is set to iron before starting.
-//Note: You can take smithing to 120 with Boomerangs to save on ingots
-//Note: Tongs weight the least of the smithing tools
+//You can take smithing to 120 with Boomerangs to save on ingots
+//Tongs weight the least of the smithing tools and have the highest success/exceptional chance when crafting with tinkerer
+//Tools should be in you main backpack so that they are usable by the salvage bag
 clearjournal
 if not @listexists 'smithyTools'
   createlist 'smithyTools'
   pushlist 'smithyTools' 0x13e3 //Smith's Hammer
   pushlist 'smithyTools' 0xfb5 //Sledge Hammer
   pushlist 'smithyTools' 0xfbc //Tongs
-endif
-for 0 in 'smithyTools'
-  if @findtype smithyTools[] 'backpack'
-    @setalias  'selectedTool' 'found'
-    break
-  endif
-endfor
-if not @findobject 'selectedTool'
-  headmsg 'Get more smithy tools!'
-  stop
 endif
 if not @findobject 'salvageBag'
   headmsg 'Select your salvage bag'
@@ -27,63 +18,71 @@ endif
 if not @findobject 'restock'
   headmsg 'Select the container with your ingots'
   promptalias 'restock'
-  useobject 'restock'
 endif
-if @counttype 0x1bf2 0x0 'salvageBag' < 30
-  if @counttype 0x1bf2 0x0 'restock' < 200
-    headmsg 'Out of ingots'
+useobject 'restock'
+pause 1000
+while not dead
+  for 0 in 'smithyTools'
+    if @findtype smithyTools[] 'backpack'
+      @setalias  'selectedTool' 'found'
+      break
+    endif
+  endfor
+  if not @findobject 'selectedTool'
+    headmsg 'Get more smithy tools!'
     stop
   endif
-  movetype 0x1bf2 'restock' 'salvageBag' 0 0 0 0x0 200
-  pause 1000
-endif
-if contents 'backpack' > 115 or diffweight < 95
-  waitforcontext 'salvageBag' 911 15000
-  waitforjournal 'Salvaged:' 3000
-  pause 1000
-  replay
-endif
-while @movetype 0x1bf2 'backpack' 'salvageBag' 0 0 0 0x0 0 0
-  pause 1000
+  if @counttype 0x1bf2 0x0 'salvageBag' < 25
+    if @counttype 0x1bf2 0x0 'restock' < 200
+      headmsg 'Out of ingots'
+      stop
+    endif
+    movetype 0x1bf2 'restock' 'salvageBag' 0 0 0 0x0 200
+    pause 1000
+  endif
+  if @injournal 'That container cannot hold' 'system' (or contents 'backpack' > 115) or diffweight < 95
+    clearjournal
+    waitforcontext 'salvageBag' 911 15000
+    waitforjournal 'Salvaged:' 3000
+    pause 2000
+    clearjournal
+    continue
+  endif
+  while @movetype 0x1bf2 'backpack' 'salvageBag' 0 0 0 0x0 0 0
+    pause 1000
+  endwhile
+  if skill 'blacksmithy' < 29
+    headmsg 'Buy more skill!'
+    stop
+  elseif useobject 'selectedTool'
+    waitforgump 0x1cc 15000
+    if skill 'blacksmithy' < 45.0
+      replygump 0x1cc 77 //Mace
+    elseif skill 'blacksmithy' < 50.0
+      replygump 0x1cc 78 //Maul
+    elseif skill 'blacksmithy' < 55.0
+      replygump 0x1cc 44 //Cutlass
+    elseif skill 'blacksmithy' < 59.5
+      replygump 0x1cc 46 //Katana
+    elseif skill 'blacksmithy' < 70.5
+      replygump 0x1cc 74 //Spear
+    elseif skill 'blacksmithy' < 75.0
+      replygump 0x1cc 47 //Kryss
+    elseif skill 'blacksmithy' < 89.9
+      replygump 0x1cc 56 //Shuriken
+    elseif skill 'blacksmithy' < 100.0
+      replygump 0x1cc 104 //Circlet
+    elseif skill 'blacksmithy' < 105.1
+      replygump 0x1cc 208 //Boomerang
+    elseif skill 'blacksmithy' < 110.1
+      replygump 0x1cc 17 //Platemail Hiro Sode
+    elseif skill 'blacksmithy' < 120
+      replygump 0x1cc 32 //Standard Platemail Kabuto
+    else
+      headmsg 'Blacksmithy completed!'
+      stop
+    endif
+    waitforgump 0x1cc 15000
+    pause 1000
+  endif
 endwhile
-if skill 'blacksmithy' < 29
-  headmsg 'Buy more skill!'
-  stop
-elseif useobject 'selectedTool'
-  waitforgump 0x1cc 15000
-  if skill 'blacksmithy' < 45.0
-    replygump 0x1cc 77 //Mace
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 50.0
-    replygump 0x1cc 78 //Maul
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 55.0
-    replygump 0x1cc 44 //Cutlass
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 59.5
-    replygump 0x1cc 46 //Katana
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 70.5
-    replygump 0x1cc 74 //Spear
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 75.0
-    replygump 0x1cc 47 //Kryss
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 89.9
-    replygump 0x1cc 56 //Shuriken
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 100.0
-    replygump 0x1cc 104 //Circlet
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 105
-    replygump 0x1cc 208 //Boomerang
-    waitforgump 0x1cc 15000
-  elseif skill 'blacksmithy' < 120.0
-    replygump 0x1cc 15 //Platemail Mempo
-    waitforgump 0x1cc 15000
-  else
-    headmsg 'Blacksmithy completed!'
-    stop
-  endif
-  pause 1000
-endif
