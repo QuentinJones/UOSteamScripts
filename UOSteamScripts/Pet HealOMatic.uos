@@ -3,20 +3,29 @@
 //Requirements: Veterinary and/or Magery skill
 //Notes: Script does not currently check if skill is high enough to cure poison or resurrect pets
 clearjournal
-if not findalias 'pet1' or not @findobject 'pet1'
-  headmsg 'Select first pet'
+if not @target 'pet1'
+  unsetalias 'pet1'
+endif
+if not @findalias 'pet1'
+  headmsg 'Select pet'
   promptalias 'pet1'
 endif
 if dead 'pet1'
   while dead 'pet1'
     usetype 0xe21
-    autotargetfriend 'pet1'
+    @target 'pet1'
     waitforjournal 'You begin applying the bandages' 3000
     while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
       if @injournal 'You were unable to resurrect your patient' 'system'
         clearjournal
         replay
       elseif @injournal 'You finish applying the bandages' 'system'
+        clearjournal
+        replay
+      elseif @injournal 'You cannot perform beneficial acts' 'system'
+        clearjournal
+        replay
+      elseif @injournal 'You have lost some compassion' 'system'
         clearjournal
         replay
       endif
@@ -29,7 +38,7 @@ else
     if inrange 'pet1' 2
       if @findtype 0xe21
         usetype 0xe21
-        autotargetfriend 'pet1'
+        @target 'pet1'
         while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
           if @injournal 'You finish applying the bandages' 'system'
             clearjournal
@@ -46,10 +55,14 @@ else
           elseif @injournal 'You have cured the target of all' 'system'
             clearjournal
             replay
+          elseif @injournal 'You cannot perform beneficial acts' 'system'
+            clearjournal
+            replay
           endif
           pause 100
         endwhile
       else
+        headmsg 'Bandages not found'
         cast 'Arch Cure' 'pet1'
         pause 1500
       endif
@@ -65,7 +78,7 @@ else
     if inrange 'pet1' 2
       if @findtype 0xe21
         usetype 0xe21
-        autotargetfriend 'pet1'
+        @target 'pet1'
         while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
           if @injournal 'You finish applying the bandages' 'system'
             clearjournal
@@ -82,10 +95,14 @@ else
           elseif @injournal 'You have cured the target of all' 'system'
             clearjournal
             replay
+          elseif @injournal 'You cannot perform beneficial acts' 'system'
+            clearjournal
+            replay
           endif
           pause 100
         endwhile
       else
+        headmsg 'Bandages not found'
         cast 'Greater Heal' 'pet1'
         pause 1500
       endif
@@ -93,7 +110,10 @@ else
       cast 'Greater Heal' 'pet1'
       pause 1500
     endif
-    if dead 'pet1' or poisoned 'pet1'
+    if dead 'pet1'
+      replay
+    endif
+    if poisoned 'pet1'
       replay
     endif
   endwhile
