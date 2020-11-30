@@ -1,9 +1,13 @@
 //Title: Auto-heal pet
 //Author: Quentin Jones
 //Requirements: Veterinary and/or Magery skill
-//Notes: Script does not currently check if skill is high enough to cure poison or resurrect pets
+//Notes: Script does not currently check if skill is high enough to cure poison or resurrect pets. If you don't have a first aid belt, just target your main backpack when prompted.
 clearjournal
-if not @target 'pet1'
+if not @findobject 'firstAidBelt'
+  headmsg 'Target your first aid belt'
+  promptalias 'firstAidBelt'
+endif
+if not @findobject 'pet1'
   unsetalias 'pet1'
 endif
 if not @findalias 'pet1'
@@ -12,32 +16,34 @@ if not @findalias 'pet1'
 endif
 if dead 'pet1'
   while dead 'pet1'
-    usetype 0xe21
-    @target 'pet1'
-    waitforjournal 'You begin applying the bandages' 3000
-    while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
-      if @injournal 'You were unable to resurrect your patient' 'system'
-        clearjournal
-        replay
-      elseif @injournal 'You finish applying the bandages' 'system'
-        clearjournal
-        replay
-      elseif @injournal 'You cannot perform beneficial acts' 'system'
-        clearjournal
-        replay
-      elseif @injournal 'You have lost some compassion' 'system'
-        clearjournal
-        replay
-      endif
-      pause 100
-    endwhile
+    if usetype 0xe21 'any' 'firstAidBelt' or usetype 0xe21
+      @target 'pet1'
+      waitforjournal 'You begin applying the bandages' 3000
+      while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
+        if @injournal 'You were unable to resurrect your patient' 'system'
+          clearjournal
+          replay
+        elseif @injournal 'You finish applying the bandages' 'system'
+          clearjournal
+          replay
+        elseif @injournal 'You cannot perform beneficial acts' 'system'
+          clearjournal
+          replay
+        elseif @injournal 'You have lost some compassion' 'system'
+          clearjournal
+          replay
+        endif
+        pause 100
+      endwhile
+    else
+      headmsg 'Bandages not found'
+    endif
     clearjournal
   endwhile
 else
   while poisoned 'pet1'
     if inrange 'pet1' 2
-      if @findtype 0xe21
-        usetype 0xe21
+      if usetype 0xe21 'any' 'firstAidBelt' or usetype 0xe21
         @target 'pet1'
         while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
           if @injournal 'You finish applying the bandages' 'system'
@@ -76,8 +82,7 @@ else
   endwhile
   while hits 'pet1' < 80
     if inrange 'pet1' 2
-      if @findtype 0xe21
-        usetype 0xe21
+      if usetype 0xe21 'any' 'firstAidBelt' or usetype 0xe21
         @target 'pet1'
         while not dead //Checking multiple if conditions is not ideal, but chaining doesn't seem to fucntion properly
           if @injournal 'You finish applying the bandages' 'system'
